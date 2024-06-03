@@ -1,0 +1,213 @@
+1. Dohvaćanje svih klubova u bazi podataka:
+
+SELECT * FROM klubovi;
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM klubovi: Specificira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "klubovi"
+
+2. Dohvaćanje svih igrača koji igraju za određeni klub (npr. klub s klub_id = 1):
+
+SELECT * FROM igraci WHERE klub_id = 1;
+
+Značenje:
+
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM igraci: Specificira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "igraci".
+•	WHERE klub_id = 1: Postavlja uvjet da se dohvaćaju samo redci gdje je klub_id jednak 1
+
+3. Dohvaćanje svih utakmica u kojima je određeni igrač sudjelovao (npr. igrač s igrac_id = 2):
+
+SELECT * FROM utakmice WHERE domacin_id = 2 OR gost_id = 2;
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM utakmice: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "utakmice".
+•	WHERE domacin_id = 2 OR gost_id = 2: Postavlja uvjet da se dohvaćaju samo redci gdje je domacin_id jednak 2 ili gost_id jednak 2.
+
+4. Dohvaćanje svih golova postignutih na određenoj utakmici (npr. utakmica s utakmica_id = 3):
+
+SELECT * FROM golovi WHERE dogadaj_id IN (SELECT dogadaj_id FROM dogadaji WHERE utakmica_id = 3);
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM golovi: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "golovi".
+•	WHERE dogadaj_id IN (SELECT dogadaj_id FROM dogadaji WHERE utakmica_id = 3): Postavlja uvjet da se dohvaćaju samo redci gdje je dogadaj_id jednak onima koji su povezani s utakmicom_id jednakim 3.
+5.Dohvaćanje svih igrača koji su dobili crveni karton:
+
+SELECT * FROM stegovne_mjere WHERE tip_kartona = 'crveni';
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM stegovne_mjere: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "stegovne_mjere".
+•	WHERE tip_kartona = 'crveni': Postavlja uvjet da se dohvaćaju samo redci gdje je tip_kartona jednak 'crveni'.
+6. Dohvaćanje broja golova i asistencija za određenog igrača na svim utakmicama:
+
+SELECT igrac_id, SUM(broj_golova) AS ukupno_golova, SUM(broj_asistencija) AS ukupno_asistencija
+FROM statistike
+WHERE igrac_id = 4
+GROUP BY igrac_id;
+
+Značenje:
+•	SELECT igrac_id, SUM(broj_golova) AS ukupno_golova, SUM(broj_asistencija) AS ukupno_asistencija: Bira igrač_id, zbroj broja golova i zbroj broja asistencija iz tablice "statistike", te koristi SUM() za izračun.
+•	FROM statistike: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "statistike".
+•	WHERE igrac_id = 4: Postavlja uvjet da se dohvaćaju samo redci gdje je igrač_id jednak 4.
+•	GROUP BY igrac_id: Grupira rezultate po igrač_id.
+
+7. Dohvaćanje svih utakmica u kojima su suci bili iz određene lige (npr. liga s liga_id = 2):
+
+SELECT * FROM utakmice 
+WHERE glavni_sudac_id IN (SELECT sudac_id FROM suci WHERE liga_id = 2);
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM utakmice: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "utakmice".
+•	WHERE glavni_sudac_id IN (SELECT sudac_id FROM suci WHERE liga_id = 2): Postavlja uvjet da se dohvaćaju samo redci gdje je glavni_sudac_id jednak onima koji su povezani s liga_id jednakim 2.
+
+8. Dohvaćanje svih utakmica kojima je domaćin klub iz određene države (npr. država = 'Hrvatska'):
+
+SELECT * FROM utakmice
+WHERE domacin_id IN (SELECT klub_id FROM klubovi WHERE drzava = 'Hrvatska');
+ 
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM utakmice: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "utakmice".
+•	WHERE domacin_id IN (SELECT klub_id FROM klubovi WHERE drzava = 'Hrvatska'): Postavlja uvjet da se dohvaćaju samo redci gdje je domacin_id jednak onima koji su povezani s klubovima čija je drzava 'Hrvatska'.
+
+9. Dohvaćanje svih igrača koji su sudjelovali na treningu u određenom klubu (npr. klub s klub_id = 3):
+
+SELECT * FROM treninzi WHERE klub_id = 3;
+
+Značenje:
+•	SELECT *: Bira sve stupce iz tablice.
+•	FROM treninzi: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "treninzi".
+•	WHERE klub_id = 3: Postavlja uvjet da se dohvaćaju samo redci gdje je klub_id jednak 3.
+10. Dohvaćanje prosječnog broja golova postignutih na utakmicama u određenoj sezoni (npr. sezona = '2023/2024'):
+
+SELECT AVG(broj_golova) AS prosjecni_broj_golova
+FROM statistike
+WHERE utakmica_id IN (SELECT utakmica_id FROM utakmice WHERE sezona = '2023/2024');
+
+Značenje:
+•	SELECT AVG(broj_golova) AS prosjecni_broj_golova: Bira prosječni broj golova iz tablice "statistike" koristeći AVG().
+•	FROM statistike: Specifičira iz koje tablice se podaci dohvaćaju, u ovom slučaju, tablica "statistike".
+•	WHERE utakmica_id IN (SELECT utakmica_id FROM utakmice WHERE sezona = '2023/2024'): Postavlja uvjet da se dohvaćaju samo redci gdje je utakmica_id jednak onima koji su povezani s utakmicama čija je sezona '2023/2024'.
+
+
+
+
+1.	Procedura za dodavanje nove utakmice
+
+CREATE OR REPLACE PROCEDURE dodaj_novu_utakmicu (
+p_datum DATE,
+p_vrijeme VARCHAR2,
+p_lokacija VARCHAR2,
+p_domacin_id NUMBER,
+p_gost_id NUMBER,
+p_liga_id NUMBER,
+p_sudac_id NUMBER
+) IS
+BEGIN
+INSERT INTO Utakmice (utakmica_id, datum, vrijeme, lokacija, 	domacin_id, gost_id, liga_id, sudac_id)
+VALUES (seq_utakmice.nextval, p_datum, p_vrijeme, p_lokacija, 	p_domacin_id, p_gost_id, p_liga_id, p_sudac_id);
+COMMIT;
+END;
+
+Detaljno objašnjenje: 
+Ovaj PL/SQL kod definira proceduru dodaj_novu_utakmicu za dodavanje novih utakmica u tablicu "Utakmice". Procedura prima parametre kao što su datum, vrijeme, lokacija, ID domaćina, ID gosta, ID lige i ID suca. Unutar procedura, koristi se INSERT INTO naredba za umetanje novog reda u tablicu "Utakmice". ID utakmice generira se pomoću sekvence seq_utakmice.nextval, a zatim se koristi COMMIT za potvrđivanje promjena u bazi podataka.
+
+1.	Izračun broja zabijenih golova
+CREATE OR REPLACE FUNCTION broj_golova_kluba (
+    p_klub_id NUMBER
+) RETURN NUMBER IS
+    v_broj_golova NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO v_broj_golova
+    FROM Golovi
+    WHERE tim_id = p_klub_id;
+    RETURN v_broj_golova;
+END;
+
+Detaljno objašnjenje: 
+Ova PL/SQL funkcija broj_golova_kluba računa ukupan broj golova koje je određeni klub postigao. Funkcija prima parametar p_klub_id, koji označava ID kluba. U funkciji se koristi SELECT COUNT(*) INTO naredba za brojanje redova u tablici "Golovi" gdje je tim_id jednak proslijeđenom klubu. Rezultat broja golova vraća se pomoću RETURN.
+
+2.	Prikaz Informacija o Klubu (View)
+CREATE OR REPLACE VIEW klub_info AS
+SELECT
+    K.klub_id,
+    K.ime_kluba,
+    K.adresa,
+    K.stadion,
+    COUNT(U.utakmica_id) AS broj_utakmica
+FROM
+    Klubovi K
+    LEFT JOIN Utakmice U ON K.klub_id = U.domacin_id OR K.klub_id = U.gost_id
+GROUP BY
+    K.klub_id, K.ime_kluba, K.adresa, K.stadion;
+
+
+Detaljno objašnjenje: 
+Ovaj SQL kod definira pogled klub_info koji prikazuje informacije o klubovima, uključujući ID kluba, ime kluba, adresu, stadion te broj odigranih utakmica. Koristi se LEFT JOIN kako bi se uključile informacije o klubu čak i ako klub nije domaćin ili gost u nijednoj utakmici. COUNT(U.utakmica_id) broji utakmice za svaki klub.
+
+3.	Generiranje Izvješća o Kartonima
+
+CREATE OR REPLACE PROCEDURE izvjestaj_o_kartonima (
+    p_utakmica_id NUMBER
+) IS
+BEGIN
+    FOR karton IN (SELECT * FROM Stegovne_mjere WHERE dogadaj_id = p_utakmica_id) LOOP
+        DBMS_OUTPUT.PUT_LINE('Igrac ID ' || karton.igrac_id || ' dobio je ' || karton.tip_kartona || ' karton.');
+    END LOOP;
+END;
+
+
+Detaljno objašnjenje: 
+Ova PL/SQL procedura izvjestaj_o_kartonima generira izvještaj o stegovnim mjerama (kartonima) za određenu utakmicu. Koristi se FOR petlja koja prolazi kroz rezultate upita koji selektira sve stegovne mjere (Karton) za zadani događaj (utakmica_id). Svaki karton se ispisuje pomoću DBMS_OUTPUT.PUT_LINE.
+
+
+4.	Ažuriranje Informacija o Igraču
+CREATE OR REPLACE PROCEDURE azuriraj_info_igraca (
+    p_igrac_id NUMBER,
+    p_novo_ime VARCHAR2,
+    p_novo_prezime VARCHAR2,
+    p_nova_nacionalnost VARCHAR2
+) IS
+BEGIN
+    UPDATE Igraci
+    SET ime = p_novo_ime, prezime = p_novo_prezime, nacionalnost = p_nova_nacionalnost
+    WHERE igrac_id = p_igrac_id;
+    COMMIT;
+END;
+
+
+Detaljno objašnjenje: 
+Ova procedura azuriraj_info_igraca ažurira informacije o određenom igraču. Koristi se UPDATE naredba koja mijenja podatke u tablici "Igraci" gdje je ID igrača jednak proslijeđenom ID-u. Nakon ažuriranja, koristi se COMMIT za potvrđivanje promjena.
+
+5.	Generiranje Izvješća o Statistikama Utakmice
+
+CREATE OR REPLACE PROCEDURE izvjestaj_o_statistikama_utakmice (
+    p_utakmica_id NUMBER
+) IS
+BEGIN
+    FOR stats IN (SELECT * FROM Statistike WHERE utakmica_id = p_utakmica_id) LOOP
+        DBMS_OUTPUT.PUT_LINE('Igrac ID ' || stats.igrac_id || ' postigao je ' || stats.broj_golova || ' golova.');
+    END LOOP;
+END;
+
+
+Detaljno objašnjenje: 
+Ova procedura izvjestaj_o_statistikama_utakmice generira izvještaj o statistikama igrača za određenu utakmicu. Koristi se FOR petlja koja prolazi kroz rezultate upita koji selektira sve statistike (Statistike) iz tablice za određenu utakmicu (utakmica_id). Svaka statistika se ispisuje pomoću DBMS_OUTPUT.PUT_LINE.
+
+
+6.	Brisanje Utakmice
+CREATE OR REPLACE PROCEDURE obrisi_utakmicu (
+    p_utakmica_id NUMBER
+) IS
+BEGIN
+    DELETE FROM Utakmice WHERE utakmica_id = p_utakmica_id;
+    COMMIT;
+END;
+
+
+Detaljno objašnjenje: 
+Ova procedura obrisi_utakmicu briše određenu utakmicu iz tablice "Utakmice". Koristi se DELETE FROM naredba s uvjetom WHERE utakmica_id = p_utakmica_id. Nakon brisanja, COMMIT potvrđuje promjene. 
